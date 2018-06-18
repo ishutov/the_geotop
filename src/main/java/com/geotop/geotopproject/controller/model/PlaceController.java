@@ -56,11 +56,16 @@ public class PlaceController {
         return placeService.getMostPopularCategoriesForUser(id);
     }
 
-    @RequestMapping(value = "/user/related", method = RequestMethod.GET)
-    public List<Place> findRelatedPlacesForUser(@RequestParam(value = "cat") String category, @RequestParam(value = "lat") String lat,
-                                                @RequestParam(value = "lon") String lon) {
+    @RequestMapping(value = "/user/suggested", method = RequestMethod.GET)
+    public List<Place> findSuggestedPlacesForUser(@RequestParam(value = "cat") String category, @RequestParam(value = "lat") String lat,
+                                                  @RequestParam(value = "lon") String lon) {
         return placeService.getSuggestedPlaces(category, lat, lon);
     }
 
+    @RequestMapping(value = "/user/related", method = RequestMethod.GET)
+    public List<Place> findRelatedPlacesForUser(@RequestParam(value = "cat") String category, @RequestParam(value = "lat") String lat,
+                                                  @RequestParam(value = "lon") String lon) {
+        return placeService.getRelatedPlaces(category, lat, lon);
+    }
 
 }

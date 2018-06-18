@@ -24,6 +24,7 @@ public class Place {
     private Double overallRating;
     private Double overallPopularity;
     private String picture;
+    private String osmId;
 
     @Field("vkData")
     private APISpecificData vkData;
@@ -32,6 +33,15 @@ public class Place {
     private Boolean alone;
 
     public Place() {
+    }
+
+    public Place(String osmId, String title, double latitude, double longitude, Integer type, String address) {
+        this.osmId = osmId;
+        this.title = title;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.type = type;
+        this.address = address;
     }
 
     public String getId() {
@@ -114,6 +124,14 @@ public class Place {
         this.picture = picture;
     }
 
+    public String getOsmId() {
+        return osmId;
+    }
+
+    public void setOsmId(String osmId) {
+        this.osmId = osmId;
+    }
+
     public APISpecificData getVkData() {
         return vkData;
     }
@@ -132,8 +150,8 @@ public class Place {
 
     @Override
     public String toString() {
-        return String.format("Place[id=%s, title=%s, address=%s, lt=%s, lg=%s]",
-                id, title, address, latitude, longitude);
+        return String.format("Place[id=%s, title=%s, address=%s, lt=%s, lg=%s, osmId=%s]",
+                id, title, address, latitude, longitude, osmId);
     }
 
 }

@@ -74,7 +74,6 @@ public class PlaceMerger {
 
     private APISpecificData mergeApiSpecificData(APISpecificData target, APISpecificData collapsed) {
         target = mergeCheckins(target, collapsed);
-        target = mergeRating(target, collapsed);
 
         return target;
     }
@@ -98,31 +97,6 @@ public class PlaceMerger {
             target.setCheckinsCount(collapsedCheckinsCount);
         } else {
             target.setCheckinsCount(targetCheckinsCount + collapsedCheckinsCount);
-        }
-
-        return target;
-    }
-
-    private APISpecificData mergeRating(APISpecificData target, APISpecificData collapsed) {
-        Double targetRating = target.getRating();
-        Double collapsedRating = collapsed.getRating();
-
-        if (targetRating == null) {
-            target.setRating(collapsedRating);
-        } else {
-            target.setRating(Utils.average(targetRating, collapsedRating));
-        }
-
-        return mergeRatingCount(target, collapsed);
-    }
-
-    private APISpecificData mergeRatingCount(APISpecificData target, APISpecificData collapsed) {
-        Integer fbRatingCountTarget = target.getRatingCount();
-        Integer fbRatingCountCollapsed = collapsed.getRatingCount();
-        if (fbRatingCountTarget == null) {
-            target.setRatingCount(fbRatingCountCollapsed);
-        } else {
-            target.setRatingCount(fbRatingCountTarget + fbRatingCountCollapsed);
         }
 
         return target;

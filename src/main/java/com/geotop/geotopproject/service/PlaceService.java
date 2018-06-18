@@ -29,13 +29,16 @@ public class PlaceService {
     private PlaceCollectionRepository placeCollectionRepository;
     private LoaderService loaderService;
     private VKLoader vkLoader;
+    private SparqlLoader sparqlLoader;
 
     @Autowired
-    public PlaceService(PlaceRepository placeRepository, PlaceCollectionRepository placeCollectionRepository, LoaderService loaderService, VKLoader vkLoader) {
+    public PlaceService(PlaceRepository placeRepository, PlaceCollectionRepository placeCollectionRepository,
+                        LoaderService loaderService, VKLoader vkLoader, SparqlLoader sparqlLoader) {
         this.placeRepository = placeRepository;
         this.placeCollectionRepository = placeCollectionRepository;
         this.loaderService = loaderService;
         this.vkLoader = vkLoader;
+        this.sparqlLoader = sparqlLoader;
     }
 
     public List<Place> getTopPlacesByType(String type) throws NotFoundException {
@@ -91,6 +94,7 @@ public class PlaceService {
 
         return map.entrySet()
                 .stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
                 .filter(e -> !e.getKey().equals(11)) // type Other is not needed
                 .map(e -> new CategoryPopularity(e.getKey(), e.getValue().intValue()))
                 .limit(3)
@@ -111,8 +115,11 @@ public class PlaceService {
     }
 
     public List<Place> getSuggestedPlaces(String categoryId, String lat, String lon) throws NotFoundException {
-        SparqlLoader.getResult(categoryId, lat, lon);
-        return null;
+        return sparqlLoader.getSuggestedPlaces(categoryId, lat, lon);
+    }
+
+    public List<Place> getRelatedPlaces(String categoryId, String lat, String lon) throws NotFoundException {
+        return sparqlLoader.getRelatedPlaces(categoryId, lat, lon);
     }
 
     private Map<Integer, Long> getPlaceCategoryWithPopularity(List<Place> places) {

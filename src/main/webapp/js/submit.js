@@ -1,6 +1,7 @@
 //CONST
 var LAT_DEFAULT_SPB = 59.934932;
 var LONG_DEFAULT_SPB = 30.333555;
+var ZOOM_DEFAULT_SPB = 9;
 var ZOOM_DEFAULT_EUROPE = 3;
 
 var map;
@@ -8,7 +9,7 @@ var map;
 ymaps.ready(function () {
     map = new ymaps.Map("map", {
         center: [LAT_DEFAULT_SPB, LONG_DEFAULT_SPB],
-        zoom: ZOOM_DEFAULT_EUROPE
+        zoom: ZOOM_DEFAULT_SPB
     });
     map.controls.remove('searchControl');
     map.controls.remove('trafficControl');
@@ -83,15 +84,33 @@ function setTop(id) {
 }
 
 function showPlaceFromTop(category) {
+    var pl_title = document.getElementById('pl_title');
+    var pl_addr = document.getElementById('pl_address');
+    var pl_coords = document.getElementById('pl_coords');
+
     showLoading();
     map.geoObjects.removeAll();
     navigator.geolocation.getCurrentPosition(function(location) {
         $.ajax({
-            url: '/rest/user/related',
+            url: '/rest/user/suggested',
             type: 'GET',
             data: 'cat='+category+'&lat='+location.coords.latitude+'&lon='+location.coords.longitude,
             success: function (data) {
-                var topPlaces = JSON.parse(JSON.stringify(data));
+                hideLoading();
+                var markList = JSON.parse(JSON.stringify(data));
+                jQuery.each(markList, function (key, value) {
+                    var placeMark = new ymaps.Placemark([value.latitude, value.longitude], {
+                        balloonContent: value.title}, {
+                        iconColor: '#ff0000'
+                    });
+                    map.geoObjects.add(placeMark);
+                    placeMark.events.add('click', function () {
+                        hideSelectors();
+                        pl_title.innerHTML = value.title;
+                        pl_addr.innerHTML = value.address;
+                        pl_coords.innerHTML = 'lat: ' + value.latitude + ', lon: ' + value.longitude;
+                    });
+                });
             },
             error: function () {
                 document.getElementById("sectionTop").style.display = "none"
@@ -202,7 +221,7 @@ function getPlaces() {
             setTop(type);
 
             map.geoObjects.removeAll();
-            map.setCenter([LAT_DEFAULT_SPB, LONG_DEFAULT_SPB], ZOOM_DEFAULT_EUROPE);
+            map.setCenter([LAT_DEFAULT_SPB, LONG_DEFAULT_SPB], ZOOM_DEFAULT_SPB);
 
             var placeMarksList = [];
             var id = "id";
