@@ -42,6 +42,7 @@ public interface SparqlInterface {
             "Prefix lgdo: <http://linkedgeodata.org/ontology/>\n" +
             "Prefix lgdm: <http://linkedgeodata.org/meta/>\n" +
             "Prefix lgda: <http://linkedgeodata.org/ontology/addr%3A>\n" +
+            "Prefix bif: <bif:>\n"+
             "\n" +
             "\n" +
             "Select ?street2 ?hsn2 ?l2 ?lat2 ?lon2 ?geo2\n" +

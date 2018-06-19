@@ -41,6 +41,10 @@ function setTop(id) {
     var top_rate3 = document.getElementById('rating3');
     var top_id3 = document.getElementById('topId3');
 
+    var next1 = document.getElementById('next1');
+    var next2 = document.getElementById('next2');
+    var next3 = document.getElementById('next3');
+
     $.ajax({
         url: '/rest/user/topCategory',
         type: 'GET',
@@ -49,35 +53,45 @@ function setTop(id) {
             var topPlaces = JSON.parse(JSON.stringify(data));
             if (topPlaces[0].categoryId) {
                 $("#sectionTop").show();
-                top_div1.addEventListener("click", function () {
+                $(".related").show();
+                top_img1.addEventListener("click", function () {
                     showPlaceFromTop(topPlaces[0].categoryId);
                 });
                 top_img1.src = getCategoryPicture(topPlaces[0].categoryId);
                 top_title1.innerHTML = getCategoryTitle(topPlaces[0].categoryId);
                 top_rate1.innerHTML = topPlaces[0].popularity;
                 top_id1.innerHTML = topPlaces[0].categoryId;
+                next1.addEventListener("click", function () {
+                    showRelatedPlaces(topPlaces[0].categoryId);
+                });
             }
             if (topPlaces[1]) {
-                top_div2.addEventListener("click", function () {
+                top_img2.addEventListener("click", function () {
                     showPlaceFromTop(topPlaces[1].categoryId);
                 });
                 top_img2.src = getCategoryPicture(topPlaces[1].categoryId);
                 top_title2.innerHTML = getCategoryTitle(topPlaces[1].categoryId);
                 top_rate2.innerHTML = topPlaces[1].popularity;
                 top_id2.innerHTML = topPlaces[1].categoryId;
+                next2.addEventListener("click", function () {
+                    showRelatedPlaces(topPlaces[1].categoryId);
+                });
             }
             if (topPlaces[2]) {
-                top_div3.addEventListener("click", function(){
+                top_img3.addEventListener("click", function(){
                     showPlaceFromTop(topPlaces[2].categoryId);
                 });
                 top_img3.src = getCategoryPicture(topPlaces[2].categoryId);
                 top_title3.innerHTML = getCategoryTitle(topPlaces[2].categoryId);
                 top_rate3.innerHTML = topPlaces[2].popularity;
                 top_id3.innerHTML = topPlaces[2].categoryId;
+                next3.addEventListener("click", function () {
+                    showRelatedPlaces(topPlaces[2].categoryId);
+                });
             }
         },
         error: function () {
-            document.getElementById("sectionTop").style.display = "none"
+           // document.getElementById("sectionTop").style.display = "none"
         }
 
     });
@@ -113,18 +127,49 @@ function showPlaceFromTop(category) {
                 });
             },
             error: function () {
-                document.getElementById("sectionTop").style.display = "none"
+                //document.getElementById("sectionTop").style.display = "none"
             }
 
         });
     });
-    var placeMark = new ymaps.Placemark([place.latitude, place.longitude], {
-        // hintContent: "Latest checkins: " + place.vkCheckins.length,
-        balloonContent: place.title
-        }, {
-        iconColor: '#ff0000'
+    hideLoading();
+}
+
+function showRelatedPlaces(category) {
+    var pl_title = document.getElementById('pl_title');
+    var pl_addr = document.getElementById('pl_address');
+    var pl_coords = document.getElementById('pl_coords');
+
+    showLoading();
+    map.geoObjects.removeAll();
+    navigator.geolocation.getCurrentPosition(function(location) {
+        $.ajax({
+            url: '/rest/user/related',
+            type: 'GET',
+            data: 'cat='+category+'&lat='+location.coords.latitude+'&lon='+location.coords.longitude,
+            success: function (data) {
+                hideLoading();
+                var markList = JSON.parse(JSON.stringify(data));
+                jQuery.each(markList, function (key, value) {
+                    var placeMark = new ymaps.Placemark([value.latitude, value.longitude], {
+                        balloonContent: value.title}, {
+                        iconColor: '#00cb04'
+                    });
+                    map.geoObjects.add(placeMark);
+                    placeMark.events.add('click', function () {
+                        hideSelectors();
+                        pl_title.innerHTML = value.title;
+                        pl_addr.innerHTML = value.address;
+                        pl_coords.innerHTML = 'lat: ' + value.latitude + ', lon: ' + value.longitude;
+                    });
+                });
+            },
+            error: function () {
+               // document.getElementById("sectionTop").style.display = "none"
+            }
+
+        });
     });
-    map.geoObjects.add(placeMark);
 
     hideLoading();
 }

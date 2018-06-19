@@ -39,7 +39,11 @@ public class SparqlLoader implements SparqlInterface {
         int i = 0;
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            String address = StringUtils.join(Arrays.asList(qs.getLiteral("street").getLexicalForm(), qs.getLiteral("hsn").getLexicalForm()), ", ");
+            String address = "";
+            if (qs.getLiteral("street") != null && qs.getLiteral("hsn") != null)
+            {
+                address = StringUtils.join(Arrays.asList(qs.getLiteral("street").getLexicalForm(), qs.getLiteral("hsn").getLexicalForm()), ", ");
+            }
             String name = qs.getLiteral("l").getLexicalForm();
             String lats = qs.getLiteral("lat").getLexicalForm();
             String longs = qs.getLiteral("lon").getLexicalForm();
@@ -57,11 +61,14 @@ public class SparqlLoader implements SparqlInterface {
         String[] sourceCategories = MP_RELATED_TYPE_MAPPING.get(categoryId);
         Map<String, String> values = new HashMap<>();
         if (query.equals(QUERY_RELATED_LGDO)) {
-            values.put("scat1", sourceCategories[0]);
-            values.put("scat2", sourceCategories[1]);
+            values.put("scat1", categories[0]);
+            values.put("scat2", categories[1]);
+            values.put("cat1", sourceCategories[0]);
+            values.put("cat2", sourceCategories[1]);
+        } else {
+            values.put("cat1", categories[0]);
+            values.put("cat2", categories[1]);
         }
-        values.put("cat1", categories[0]);
-        values.put("cat2", categories[1]);
         values.put("lon", lon);
         values.put("lat", lat);
         values.put("radius", "3");
