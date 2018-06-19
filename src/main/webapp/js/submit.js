@@ -227,7 +227,7 @@ function getCategoryPicture(id) {
             categoryPicture = "Entertainment";
             break;
         case 4:
-            categoryPicture = "Bar";
+            categoryPicture = "http://www.eatlogos.com/food_and_drinks/png/vector_orange_drinks_logo.png";
             break;
         case 5:
             categoryPicture = "Movie Theater";
@@ -239,7 +239,7 @@ function getCategoryPicture(id) {
             categoryPicture = "Educational Institution";
             break;
         case 8:
-            categoryPicture = "Museum";
+            categoryPicture = "https://cdn1.iconfinder.com/data/icons/travel-landmarks-2/128/colosseum-512.png";
             break;
         case 9:
             categoryPicture = "Theater";

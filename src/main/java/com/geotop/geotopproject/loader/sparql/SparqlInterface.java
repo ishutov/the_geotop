@@ -45,15 +45,15 @@ public interface SparqlInterface {
             "Prefix bif: <bif:>\n"+
             "\n" +
             "\n" +
-            "Select ?street2 ?hsn2 ?l2 ?lat2 ?lon2 ?geo2\n" +
+            "Select ?street ?hsn ?l ?lat ?lon ?geo\n" +
             "From <http://linkedgeodata.org> {\n" +
             "    {?s a lgdo:%(scat1) .}\n" +
             "    union\n" +
             "    {?s a lgdo:%(scat2) .}\n" +
             "    ?s\n" +
             "      a lgdm:Node ;\n" +
-            "      coord:lat ?lat ;\n" +
-            "      coord:long ?lon ;\n" +
+            "      coord:lat ?lat1 ;\n" +
+            "      coord:long ?lon1 ;\n" +
             "      geom:geometry [\n" +
             "        ogc:asWKT ?geo1\n" +
             "      ] .\n" +
@@ -63,11 +63,11 @@ public interface SparqlInterface {
             "    {?x a lgdo:%(cat2) .}\n" +
             "    ?x\n" +
             "      a lgdm:Node ;\n" +
-            "      lgda:street ?street2 ;\n" +
-            "      lgda:housenumber ?hsn2 ;\n" +
-            "      rdfs:label ?l2 ;\n" +
-            "      coord:lat ?lat2 ;\n" +
-            "      coord:long ?lon2 ;\n" +
+            "      lgda:street ?street ;\n" +
+            "      lgda:housenumber ?hsn ;\n" +
+            "      rdfs:label ?l ;\n" +
+            "      coord:lat ?lat ;\n" +
+            "      coord:long ?lon ;\n" +
             "      geom:geometry [\n" +
             "        ogc:asWKT ?geo2\n" +
             "      ] .\n" +
