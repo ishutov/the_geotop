@@ -239,7 +239,7 @@ function getCategoryPicture(id) {
             categoryPicture = "Educational Institution";
             break;
         case 8:
-            categoryPicture = "https://cdn1.iconfinder.com/data/icons/travel-landmarks-2/128/colosseum-512.png";
+            categoryPicture = "https://www.shareicon.net/data/512x512/2015/08/16/86021_museum_512x512.png";
             break;
         case 9:
             categoryPicture = "Theater";
